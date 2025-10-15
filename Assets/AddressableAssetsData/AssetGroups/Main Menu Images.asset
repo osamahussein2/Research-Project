@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Main Menu Images
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Main Menu Images
+  m_GUID: 48777e9ae0f9c3842aee3d96092d6f1c
+  m_SerializeEntries:
+  - m_GUID: 186771d76d650994591c0bf7e1788a11
+    m_Address: Assets/UI Images/Main Menu Images/QuitButton.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MainMenu
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5a86f2c1b5db4a647964666bcd7a6d56
+    m_Address: Assets/UI Images/Main Menu Images/PlayButton.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MainMenu
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: a305bd2d2b7f07c448ee6c4ae9a12295, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: f28c7b2f9255e0f40adc4c1e6a5b1285, type: 2}
+    - {fileID: 11400000, guid: fbd4ae189260b074b8211e77a794bcad, type: 2}
