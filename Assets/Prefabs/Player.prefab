@@ -169,3 +169,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0be3ab78948c3b448a1258224a7f9c8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  fallingObject: {fileID: 2470418525588828502, guid: 9578a3c5530114a42821fba9aee5fdf7, type: 3}
+  playerSpeed: 5
+  numberOfFallingObjects: 6
+  fallingObjectXLocation: -5
+  fallingObjectXOffset: 2
