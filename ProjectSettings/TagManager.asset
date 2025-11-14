@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Falling
+  - PauseMenu
   layers:
   - Default
   - TransparentFX

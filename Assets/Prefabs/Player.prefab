@@ -170,7 +170,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   fallingObject: {fileID: 2470418525588828502, guid: 9578a3c5530114a42821fba9aee5fdf7, type: 3}
+  fallingObjects: []
   playerSpeed: 5
   numberOfFallingObjects: 6
   fallingObjectXLocation: -5
   fallingObjectXOffset: 2
+  pauseMenuAssetLabel:
+    m_LabelString: PauseMenu
