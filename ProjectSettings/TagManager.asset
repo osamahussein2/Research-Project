@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Falling
   - PauseMenu
+  - Collectible
   layers:
   - Default
   - TransparentFX

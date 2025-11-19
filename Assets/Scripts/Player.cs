@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
@@ -62,6 +63,12 @@ public unsafe class Player : MonoBehaviour
 
     bool isGamePaused = false; // Set game paused to false right away
 
+    // Collectible using object pooling
+    private ObjectPool collectiblePool;
+
+    // Modify disable object pool time in inspector
+    [SerializeField] private float disableObjectPoolTime = 5.0f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -70,6 +77,9 @@ public unsafe class Player : MonoBehaviour
 
         // Load the falling object prefab
         fallingObject = Resources.Load<GameObject>("Falling Object");
+
+        // Find the object pool to spawn collectibles
+        collectiblePool = FindAnyObjectByType<ObjectPool>();
     }
 
     // Update is called once per frame
@@ -81,6 +91,9 @@ public unsafe class Player : MonoBehaviour
 
         // Call handle pause game logic using a key code and game paused boolean
         HandlePauseGame(KeyCode.Escape, isGamePaused);
+
+        // Press a key to spawn a collectible
+        PressToSpawnCollectibles(KeyCode.Space);
 
         // If falling objects aren't spawned yet
         if (!fallingObjectsSpawned)
@@ -119,6 +132,34 @@ public unsafe class Player : MonoBehaviour
             pauseMenu = DeallocatePauseMenu;
             pauseMenu();
         }
+    }
+
+    private void PressToSpawnCollectibles(KeyCode keyCode)
+    {
+        if (Input.GetKeyDown(keyCode)) SpawnCollectible();
+    }
+
+    private void SpawnCollectible()
+    {
+        if (collectiblePool != null)
+        {
+            // Spawn the collectible in the pool
+            GameObject collectible = collectiblePool.GetGameObject();
+
+            // Randomize its spawn location
+            collectible.transform.position = new Vector3(Random.Range(-9.0f, 9.0f), Random.Range(-3.0f, 3.0f), 0.0f);
+
+            // Start hiding the object in a certain amount of seconds upon spawning it in pool
+            StartCoroutine(DisableCollectible(collectible));
+        }
+    }
+
+    IEnumerator DisableCollectible(GameObject collectible)
+    {
+        // Hide the object in pool after a few seconds
+        yield return new WaitForSeconds(disableObjectPoolTime);
+
+        if (collectiblePool != null) collectiblePool.ReturnGameObject(collectible);
     }
 
     private void SpawnFallingObjects()
@@ -217,6 +258,21 @@ public unsafe class Player : MonoBehaviour
             }
         }
 
+        if (collectiblePool != null)
+        {
+            // Find any active collectibles
+            GameObject[] collectibles = GameObject.FindGameObjectsWithTag("Collectible");
+
+            foreach (GameObject collectible in collectibles)
+            {
+                // Stop disable collectible coroutine
+                StopCoroutine(DisableCollectible(collectible));
+
+                // Hide the all collectible objects in the pool
+                collectiblePool.ReturnGameObject(collectible);
+            }
+        }
+
         // Release memory arena if there is one allocated already
         if (memoryArena != null)
         {
@@ -279,6 +335,15 @@ public unsafe class Player : MonoBehaviour
 
             // Set game paused to false so that the player can pause game again
             isGamePaused = false;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Collectible")
+        {
+            // Hide the collided collectible in pool
+            collectiblePool.ReturnGameObject(collision.gameObject);
         }
     }
 }
