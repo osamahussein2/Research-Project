@@ -70,9 +70,6 @@ public unsafe class Player : MonoBehaviour
     // Modify disable object pool time in inspector
     [SerializeField] private float disableObjectPoolTime = 5.0f;
 
-    // Check for an in-game UI in scene
-    public Canvas inGameUI;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -84,9 +81,6 @@ public unsafe class Player : MonoBehaviour
 
         // Find the object pool to spawn collectibles
         collectiblePool = FindAnyObjectByType<ObjectPool>();
-
-        // Find in game UI using given tag
-        inGameUI = GameObject.FindWithTag("GameUI").GetComponent<Canvas>();
     }
 
     // Update is called once per frame
@@ -137,7 +131,7 @@ public unsafe class Player : MonoBehaviour
         else if (Input.GetKeyDown(keyCode_) && gamePaused_)
         {
             // Show in-game UI again
-            inGameUI.gameObject.SetActive(true);
+            InGameUI.GetGameObject().SetActive(true);
 
             pauseMenu = DeallocatePauseMenu;
             pauseMenu();
@@ -314,10 +308,10 @@ public unsafe class Player : MonoBehaviour
         if (memoryObject.mainMenu.inGameUI_GroupHandle.IsValid())
         {
             // Activate game object so that it can be destroyed afterwards (prevents null error when destroying object)
-            inGameUI.gameObject.SetActive(true);
+            InGameUI.GetGameObject().SetActive(true);
 
             // Destroy in-game UI
-            Destroy(inGameUI.gameObject);
+            Destroy(InGameUI.GetGameObject());
 
             // Release player group handle from memory
             Addressables.Release(memoryObject.mainMenu.inGameUI_GroupHandle);

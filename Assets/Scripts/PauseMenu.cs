@@ -11,20 +11,14 @@ public class PauseMenu : MonoBehaviour
         // Find any object with the player script inside it to allocate/deallocate pause menu
         player = FindAnyObjectByType<Player>();
 
-        // Hide in game UI when pause menu is created only if the player isn't null
-        if (player != null) player.inGameUI.gameObject.SetActive(false);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // Hide in game UI when pause menu is created
+        InGameUI.GetGameObject().SetActive(false);
     }
 
     public void ResumeGame()
     {
         // Show in game UI again when resuming
-        player.inGameUI.gameObject.SetActive(true);
+        InGameUI.GetGameObject().SetActive(true);
 
         // Only deallocate the pause menu when resuming
         player.pauseMenu = player.DeallocatePauseMenu;
