@@ -20,6 +20,10 @@ public class MainMenu : MonoBehaviour
     public AssetLabelReference playerAssetLabel;
     [HideInInspector] public AsyncOperationHandle playerGroupHandle;
 
+    // UI object for loading it after pressing play
+    public AssetLabelReference inGameUI_AssetLabel;
+    [HideInInspector] public AsyncOperationHandle inGameUI_GroupHandle;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -45,6 +49,9 @@ public class MainMenu : MonoBehaviour
 
             // Allocate player into the game
             LoadPlayerPrefab();
+
+            // Allocate in-game UI into the game
+            LoadInGameUI();
         }
     }
 
@@ -76,6 +83,19 @@ public class MainMenu : MonoBehaviour
 
             // Assign player group handle to the lambda's captured player handle variable
             playerGroupHandle = playerHandle;
+        };
+    }
+
+    public void LoadInGameUI()
+    {
+        // Only 1 game object will be loaded here (UI element) so that's why LoadAssetAsync was used here
+        Addressables.LoadAssetAsync<GameObject>(inGameUI_AssetLabel).Completed += UI_Handle =>
+        {
+            // Load in game UI element
+            Instantiate(UI_Handle.Result);
+
+            // Assign player group handle to the lambda's captured player handle variable
+            inGameUI_GroupHandle = UI_Handle;
         };
     }
 

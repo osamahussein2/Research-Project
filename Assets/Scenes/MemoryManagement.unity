@@ -641,6 +641,8 @@ MonoBehaviour:
   - {fileID: 433840996}
   playerAssetLabel:
     m_LabelString: Player
+  inGameUI_AssetLabel:
+    m_LabelString: InGame_UI
 --- !u!1 &1300118952
 GameObject:
   m_ObjectHideFlags: 0

@@ -63,6 +63,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a4e61ba47ebe45f45a600a3bc5faff96, type: 2}
   - {fileID: 11400000, guid: 67557007715e32548b6900c44d397af5, type: 2}
   - {fileID: 11400000, guid: bd0d8025b2fa97a4fae6e2d7cfda326b, type: 2}
+  - {fileID: 11400000, guid: ba8fa835f86f00741abbbd34d8518545, type: 2}
   - {fileID: 11400000, guid: c685a23ec2c1647448b3651a79137a35, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
@@ -106,6 +107,7 @@ MonoBehaviour:
     - MainMenu
     - Player
     - PauseMenu
+    - InGame_UI
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: bc7ece60696485d4d9415359bc7d10e7, type: 2}

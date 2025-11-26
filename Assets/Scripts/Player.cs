@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.UI;
 
 public unsafe class Player : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public unsafe class Player : MonoBehaviour
     private bool fallingObjectsSpawned = false;
 
     private FallObject* fallObject;
-    
+
     [SerializeField] private GameObject[] fallingObjects;
 
     [Header("Player Parameters")]
@@ -69,6 +70,9 @@ public unsafe class Player : MonoBehaviour
     // Modify disable object pool time in inspector
     [SerializeField] private float disableObjectPoolTime = 5.0f;
 
+    // Check for an in-game UI in scene
+    public Canvas inGameUI;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -80,6 +84,9 @@ public unsafe class Player : MonoBehaviour
 
         // Find the object pool to spawn collectibles
         collectiblePool = FindAnyObjectByType<ObjectPool>();
+
+        // Find in game UI using given tag
+        inGameUI = GameObject.FindWithTag("GameUI").GetComponent<Canvas>();
     }
 
     // Update is called once per frame
@@ -129,6 +136,9 @@ public unsafe class Player : MonoBehaviour
         // Call deallocate pause menu delegate once the passed in key has been pressed and invoke it
         else if (Input.GetKeyDown(keyCode_) && gamePaused_)
         {
+            // Show in-game UI again
+            inGameUI.gameObject.SetActive(true);
+
             pauseMenu = DeallocatePauseMenu;
             pauseMenu();
         }
@@ -290,11 +300,28 @@ public unsafe class Player : MonoBehaviour
         // Set falling object to null
         fallingObject = null;
 
-        // Destroy player
-        Destroy(gameObject);
+        // Valid player object
+        if (memoryObject.mainMenu.playerGroupHandle.IsValid())
+        {
+            // Destroy player
+            Destroy(gameObject);
 
-        // Release player group handle from memory
-        Addressables.Release(memoryObject.mainMenu.playerGroupHandle);
+            // Release player group handle from memory
+            Addressables.Release(memoryObject.mainMenu.playerGroupHandle);
+        }
+
+        // Valid in-game UI object
+        if (memoryObject.mainMenu.inGameUI_GroupHandle.IsValid())
+        {
+            // Activate game object so that it can be destroyed afterwards (prevents null error when destroying object)
+            inGameUI.gameObject.SetActive(true);
+
+            // Destroy in-game UI
+            Destroy(inGameUI.gameObject);
+
+            // Release player group handle from memory
+            Addressables.Release(memoryObject.mainMenu.inGameUI_GroupHandle);
+        }
 
         // Load the main menu button images once again after quitting
         memoryObject.mainMenu.gameObject.SetActive(true);
