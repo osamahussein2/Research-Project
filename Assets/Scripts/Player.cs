@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -42,23 +43,6 @@ public unsafe class Player : MonoBehaviour
     [SerializeField] private float fallingObjectXLocation = -5.0f;
     [SerializeField] private float fallingObjectXOffset = 2.0f;
 
-    // Delegates stored here
-    delegate void HandleMovement();
-    HandleMovement playerMovement;
-
-    [HideInInspector] public delegate void DestroyPlayer();
-    [HideInInspector] public DestroyPlayer destroyPlayer;
-
-    delegate void FallingObjectsLogic();
-    FallingObjectsLogic spawnFallingObjects;
-
-    delegate void ReleaseMemoryArena();
-    ReleaseMemoryArena releaseMemoryArena;
-
-    // Pause menu
-    [HideInInspector] public delegate void PauseMenuDelegate();
-    [HideInInspector] public PauseMenuDelegate pauseMenu;
-
     public AssetLabelReference pauseMenuAssetLabel;
     [HideInInspector] public AsyncOperationHandle pauseMenuGroupHandle;
 
@@ -87,8 +71,7 @@ public unsafe class Player : MonoBehaviour
     void Update()
     {
         // Call player movement delegate and invoke it
-        playerMovement = MovePlayer;
-        playerMovement();
+        MovePlayer();
 
         // Call handle pause game logic using a key code and game paused boolean
         HandlePauseGame(KeyCode.Escape, isGamePaused);
@@ -104,8 +87,7 @@ public unsafe class Player : MonoBehaviour
             // Spawn falling objects after 1 second
             if (spawnTimer >= 1.0f)
             {
-                spawnFallingObjects = SpawnFallingObjects;
-                spawnFallingObjects();
+                SpawnFallingObjects();
             }
         }
 
@@ -113,8 +95,7 @@ public unsafe class Player : MonoBehaviour
         else if (fallingObjectsSpawned)
         {
             // Eventually release memory arena after falling objects have been destroyed
-            releaseMemoryArena = FreeMemoryArena;
-            releaseMemoryArena();
+            FreeMemoryArena();
         }
     }
 
@@ -123,8 +104,7 @@ public unsafe class Player : MonoBehaviour
         // Call allocate pause menu delegate once the passed in key has been pressed and invoke it
         if (Input.GetKeyDown(keyCode_) && !gamePaused_)
         {
-            pauseMenu = AllocatePauseMenu;
-            pauseMenu();
+            AllocatePauseMenu();
         }
 
         // Call deallocate pause menu delegate once the passed in key has been pressed and invoke it
@@ -133,8 +113,7 @@ public unsafe class Player : MonoBehaviour
             // Show in-game UI again
             InGameUI.GetGameObject().SetActive(true);
 
-            pauseMenu = DeallocatePauseMenu;
-            pauseMenu();
+            DeallocatePauseMenu();
         }
     }
 
@@ -196,8 +175,13 @@ public unsafe class Player : MonoBehaviour
         // Find falling objects once they're spawned to check if they're destroyed where we free memory
         fallingObjects = GameObject.FindGameObjectsWithTag("Falling");
 
+#if DEBUG
+        StringBuilder sb = new StringBuilder("Memory Arena size in bytes: ");
+        sb.Append(memoryArena.GetMemorySize());
+
         // Return the total memory of the arena in bytes
-        Debug.Log("Memory Arena size in bytes: " + memoryArena.GetMemorySize());
+        Debug.Log(sb);
+#endif
 
         spawnTimer = 0.0f; // Reset spawn timer
         fallingObjectsSpawned = true; // Set spawned falling objects to true
@@ -361,7 +345,7 @@ public unsafe class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Collectible")
+        if (collision.gameObject.CompareTag("Collectible"))
         {
             // Hide the collided collectible in pool
             collectiblePool.ReturnGameObject(collision.gameObject);

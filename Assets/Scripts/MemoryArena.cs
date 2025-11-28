@@ -57,7 +57,9 @@ public unsafe class MemoryArena : IDisposable
 
             memorySize = 0;
 
+#if DEBUG
             Debug.Log("Arena freed!");
+#endif
         }
     }
 }

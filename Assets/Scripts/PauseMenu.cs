@@ -21,17 +21,13 @@ public class PauseMenu : MonoBehaviour
         InGameUI.GetGameObject().SetActive(true);
 
         // Only deallocate the pause menu when resuming
-        player.pauseMenu = player.DeallocatePauseMenu;
-        player.pauseMenu();
+        player.DeallocatePauseMenu();
     }
 
     public void QuitToMainMenu()
     {
         // Deallocate the pause menu and the player when quitting to main menu
-        player.pauseMenu = player.DeallocatePauseMenu;
-        player.pauseMenu();
-
-        player.destroyPlayer = player.DeallocatePlayer;
-        player.destroyPlayer();
+        player.DeallocatePauseMenu();
+        player.DeallocatePlayer();
     }
 }
